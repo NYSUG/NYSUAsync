@@ -1,5 +1,5 @@
 ### NYSUAsync.cs
-A utility to assist with running multiple asynchronous tasks with callback delegates into a single block.
+A utility to assist with running multiple asynchronous tasks with callback delegates into a single block. This utility was developed for my game Atomic Space Command. Check it out: http://atomicspacecommand.net
 
 ## Purpose
 This utility is useful for situation where you have a task that requires multiple asynchornous operations to be called in order from a single caller. For example, if you wanted to have one method for loading a player's profile it may need to make a call to the local database to load the player data, then pull a profile image from a web URL, and then pull updated player data from your servers. Each of these processes takes an unknown amount of time and need to be run in order. This utility makes it possible to run all of these from a single caller and halt and callback with any errors.
