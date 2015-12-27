@@ -65,7 +65,7 @@ public class NYSUAsync {
 	
 #region Next Blocks
 
-	public static void Next (string error, Object retval)
+	public static void Next (string error, object retval)
 	{
 		_Next (error, retval);
 	}
