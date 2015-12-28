@@ -20,12 +20,13 @@ public class MainCanvasBehavior : MonoBehaviour {
 
 	public void RunAsyncTasksButtonPressed ()
 	{
+		NYSUAsync nysuAsync = new NYSUAsync ();
 		List<System.Action> asyncTasks = new List<System.Action> ();
-		asyncTasks.Add (() => StartCoroutine (_AsyncWaitTask (NYSUAsync.Next)));
-		asyncTasks.Add (() => StartCoroutine (_AsyncWebCallWithStringTask (NYSUAsync.Next)));
-		asyncTasks.Add (() => StartCoroutine (_AsyncWebCallWithDictionaryTask (NYSUAsync.Next)));
+		asyncTasks.Add (() => StartCoroutine (_AsyncWaitTask (nysuAsync.Next)));
+		asyncTasks.Add (() => StartCoroutine (_AsyncWebCallWithStringTask (nysuAsync.Next)));
+		asyncTasks.Add (() => StartCoroutine (_AsyncWebCallWithDictionaryTask (nysuAsync.Next)));
 
-		StartCoroutine (NYSUAsync.RunTasksInSeries (asyncTasks, (string error, List<object> data) => {
+		StartCoroutine (nysuAsync.RunTasksInSeries (asyncTasks, (string error, List<object> data) => {
 			if (!string.IsNullOrEmpty (error)) {
 				Debug.Log (string.Format ("Error running tasks: {0}", error));
 				return;
