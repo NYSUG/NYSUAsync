@@ -33,19 +33,14 @@ public class NYSUAsync {
 	private readonly static Queue<System.Action> _queue = new Queue<System.Action> ();
 	
 	// Callback
-	private static NYSUAsyncCallbackType _callback;
+	private NYSUAsyncCallbackType _callback;
 	
 	// Helpers
-	private static int _runningTaskCount;
-	private static List<object> _retval = new List<object> ();
+	private int _runningTaskCount;
+	private List<object> _retval = new List<object> ();
 	
-	public static IEnumerator RunTasksInSeries (List<System.Action> tasks, NYSUAsyncCallbackType callback)
-	{
-		// Are we already processing a queue?
-		while (_queue.Count > 0) {
-			yield return new WaitForSeconds (0.5f);
-		}
-		
+	public IEnumerator RunTasksInSeries (List<System.Action> tasks, NYSUAsyncCallbackType callback)
+	{		
 		// Sanity checkNYSUAsyncCallbackType
 		if (tasks.Count == 0) {
 			callback ("NYSUAsync Error: no tasks provided", null);
@@ -56,16 +51,16 @@ public class NYSUAsync {
 		_callback = callback;
 		
 		foreach (System.Action task in tasks) {
-			NYSUAsync._queue.Enqueue (task);
+			_queue.Enqueue (task);
 		}
 		
 		// Run the first task
-		NYSUAsync._queue.Dequeue ().Invoke ();
+		_queue.Dequeue ().Invoke ();
 	}
 	
 #region Next Blocks
 
-	public static void Next (string error, object retval)
+	public void Next (string error, object retval)
 	{
 		_Next (error, retval);
 	}
@@ -75,44 +70,44 @@ public class NYSUAsync {
 		_Next (error, (object)retval);
 	}
 
-	public static void Next (string error, string retval)
+	public void Next (string error, string retval)
 	{
 		_Next (error, (object)retval);
 	}
 
-	public static void Next (string error, int retval)
+	public void Next (string error, int retval)
 	{
 		_Next (error, (object)retval);
 	}
 
-	public static void Next (string error, float retval)
+	public void Next (string error, float retval)
 	{
 		_Next (error, (object)retval);
 	}
 
-	public static void Next (string error, double retval)
+	public void Next (string error, double retval)
 	{
 		_Next (error, (object)retval);
 	}
 
-	public static void Next (string error, Dictionary<string, object> retval)
+	public void Next (string error, Dictionary<string, object> retval)
 	{
 		_Next (error, (object)retval);
 	}
 	
-	public static void Next (string error)
+	public void Next (string error)
 	{
 		_Next (error, null);
 	}
 
-	public static void _Next (string error, object retval)
+	private void _Next (string error, object retval)
 	{
 		if (!string.IsNullOrEmpty (error)) {
 			// Callback the error
-			NYSUAsync._callback (error, _retval);
+			_callback (error, _retval);
 			
 			// Clear the queue
-			NYSUAsync._queue.Clear ();
+			_queue.Clear ();
 			return;
 		}
 		
@@ -121,9 +116,9 @@ public class NYSUAsync {
 			_retval.Add (retval);
 		
 		// Check to see if there's anything else
-		if (NYSUAsync._queue.Count > 0) {
+		if (_queue.Count > 0) {
 			// Process the next task in the queue
-			NYSUAsync._queue.Dequeue ().Invoke ();
+			_queue.Dequeue ().Invoke ();
 		} else {
 			// We're all done
 			_callback (string.Empty, _retval);
